@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wedding Translation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #24342f;
+      --muted: #64716d;
+      --paper: #fffaf2;
+      --petal: #f5cfc4;
+      --sage: #8da399;
+      --line: rgba(36, 52, 47, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      background:
+        radial-gradient(circle at top left, rgba(245, 207, 196, 0.65), transparent 34rem),
+        linear-gradient(135deg, #fffaf2 0%, #f1f7f4 100%);
+      color: var(--ink);
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    }
+
+    main {
+      width: min(100%, 720px);
+      padding: clamp(32px, 7vw, 72px);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 24px 80px rgba(36, 52, 47, 0.10);
+      text-align: center;
+    }
+
+    .kicker {
+      margin: 0 0 18px;
+      color: var(--sage);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.6rem, 9vw, 5.4rem);
+      font-weight: 500;
+      line-height: 0.95;
+    }
+
+    p {
+      max-width: 520px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(1rem, 2.3vw, 1.2rem);
+      line-height: 1.7;
+    }
+
+    .date {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 34px;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .date::before,
+    .date::after {
+      width: 38px;
+      height: 1px;
+      background: var(--petal);
+      content: "";
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 18px;
+      }
+
+      main {
+        padding: 34px 24px;
+      }
+
+      .date {
+        gap: 10px;
+        font-size: 0.78rem;
+      }
+
+      .date::before,
+      .date::after {
+        width: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="kicker">Coming Soon</p>
+    <h1>Wedding Translation</h1>
+    <p>
+      A small home for wedding details, translations, and helpful notes is being prepared.
+      Please check back soon.
+    </p>
+    <div class="date" aria-label="Wedding date">September 13, 2026</div>
+  </main>
+</body>
+</html>
