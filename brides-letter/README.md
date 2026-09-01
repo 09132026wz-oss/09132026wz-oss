@@ -1,4 +1,4 @@
-# Groom's Vow
+# Bride's Letter
 
 Edit the individual language files for this page:
 

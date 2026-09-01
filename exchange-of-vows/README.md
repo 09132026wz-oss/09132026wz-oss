@@ -1,4 +1,4 @@
-# Bride's Vow
+# Exchange of Vows
 
 Edit the individual language files for this page:
 
