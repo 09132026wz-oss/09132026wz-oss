@@ -23,6 +23,11 @@
       box-sizing: border-box;
     }
 
+    *:focus-visible {
+      outline: 3px solid rgba(177, 138, 75, 0.42);
+      outline-offset: 3px;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -49,6 +54,7 @@
     a {
       color: inherit;
       text-decoration: none;
+      -webkit-tap-highlight-color: rgba(215, 135, 126, 0.18);
     }
 
     .page {
@@ -132,6 +138,7 @@
       font: inherit;
       font-size: 0.9rem;
       font-weight: 800;
+      touch-action: manipulation;
     }
 
     .language-switch button[aria-pressed="true"] {
@@ -192,6 +199,7 @@
       border: 1px solid rgba(38, 52, 47, 0.13);
       background: linear-gradient(160deg, rgba(255, 250, 244, 0.94), rgba(237, 244, 240, 0.72));
       transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      touch-action: manipulation;
     }
 
     .translation-card::after {
@@ -226,6 +234,7 @@
       font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
       font-size: clamp(1.22rem, 2vw, 1.55rem);
       line-height: 1.12;
+      overflow-wrap: anywhere;
     }
 
     .card-action {
@@ -247,11 +256,12 @@
     @media (max-width: 920px) {
       header {
         grid-template-columns: 1fr;
+        gap: 22px;
       }
 
       .language-panel {
         min-width: 0;
-        width: min(100%, 420px);
+        width: min(100%, 460px);
       }
 
       .button-grid {
@@ -266,28 +276,138 @@
 
       .page {
         width: min(100% - 24px, 1120px);
-        padding-top: 28px;
+        padding: 22px 0 42px;
       }
 
       header {
-        padding-top: 34px;
+        gap: 18px;
+        padding: 30px 0 24px;
+      }
+
+      .kicker {
+        margin-bottom: 12px;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+      }
+
+      h1 {
+        max-width: 10ch;
+        font-size: clamp(2.85rem, 14vw, 4.2rem);
+        line-height: 0.96;
+      }
+
+      .intro {
+        margin-top: 20px;
+        font-size: 1rem;
+        line-height: 1.62;
+      }
+
+      .language-panel {
+        width: 100%;
+        padding: 12px;
+        box-shadow: 0 16px 42px rgba(56, 64, 59, 0.1);
+      }
+
+      .language-label {
+        margin-bottom: 9px;
+        font-size: 0.72rem;
+      }
+
+      .language-switch {
+        gap: 4px;
+        padding: 4px;
+      }
+
+      .language-switch button {
+        min-height: 46px;
+        padding: 0 6px;
+        font-size: 0.82rem;
+      }
+
+      section {
+        padding: 22px 16px;
       }
 
       .section-heading {
         display: block;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+      }
+
+      h2 {
+        font-size: 2rem;
       }
 
       .section-note {
         margin-top: 10px;
         text-align: left;
+        font-size: 0.9rem;
       }
 
       .button-grid {
         grid-template-columns: 1fr;
+        gap: 10px;
       }
 
       .translation-card {
-        min-height: 128px;
+        min-height: 96px;
+        grid-template-columns: auto 1fr;
+        column-gap: 16px;
+        align-items: center;
+        align-content: center;
+        padding: 16px;
+      }
+
+      .translation-card::after {
+        right: -38px;
+        bottom: -44px;
+      }
+
+      .number {
+        grid-row: 1 / span 2;
+        font-size: 1.45rem;
+      }
+
+      .card-title {
+        margin-top: 0;
+        font-size: 1.22rem;
+        line-height: 1.18;
+      }
+
+      .card-action {
+        margin-top: 8px;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+      }
+
+      footer {
+        margin-top: 26px;
+        padding: 0 14px;
+        font-size: 0.82rem;
+        line-height: 1.6;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .page {
+        width: min(100% - 18px, 1120px);
+      }
+
+      h1 {
+        font-size: 2.55rem;
+      }
+
+      .language-switch {
+        grid-template-columns: 1fr;
+      }
+
+      .language-switch button {
+        min-height: 42px;
+      }
+
+      .translation-card {
+        column-gap: 12px;
+        padding: 14px;
       }
     }
   </style>
