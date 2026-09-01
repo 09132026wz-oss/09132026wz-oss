@@ -1,13 +1,7 @@
 # Groom's Vow
 
-## English
+Edit the individual language files for this page:
 
-Add the English groom's vow here.
-
-## Chinese
-
-Add the Chinese translation here.
-
-## Korean
-
-Add the Korean translation here.
+- `english.md`
+- `chinese.md`
+- `korean.md`

@@ -1,13 +1,7 @@
 # Groom's PhD Advisor's Speech
 
-## English
+Edit the individual language files for this page:
 
-Add the English groom's PhD advisor's speech here.
-
-## Chinese
-
-Add the Chinese translation here.
-
-## Korean
-
-Add the Korean translation here.
+- `english.md`
+- `chinese.md`
+- `korean.md`

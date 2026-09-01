@@ -58,16 +58,51 @@
       padding: 46px 0 70px;
     }
 
+    .top-bar {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
     .back-link {
       display: inline-flex;
       align-items: center;
       min-height: 44px;
-      margin-bottom: 22px;
       color: var(--sage);
       font-size: 0.82rem;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+    }
+
+    .language-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      min-width: 260px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 244, 0.84);
+    }
+
+    .language-switch button {
+      min-height: 40px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 800;
+      touch-action: manipulation;
+    }
+
+    .language-switch button[aria-pressed="true"] {
+      background: var(--ink);
+      color: #fffaf4;
+      box-shadow: 0 8px 18px rgba(38, 52, 47, 0.18);
     }
 
     article {
@@ -120,6 +155,17 @@
       font-style: italic;
     }
 
+    @media (max-width: 640px) {
+      .top-bar {
+        display: grid;
+      }
+
+      .language-switch {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
     @media (max-width: 560px) {
       body::before {
         inset: 10px;
@@ -148,7 +194,15 @@
 </head>
 <body>
   <main class="page">
-    <a class="back-link" href="./">Back to Menu</a>
+    <div class="top-bar">
+      <a class="back-link" href="./">Back to Menu</a>
+      <div class="language-switch" aria-label="Language selector">
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+        <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
+      </div>
+    </div>
+
     <article>
       <p class="kicker">Wedding Translation</p>
       <div id="content" class="empty-state">Loading translation...</div>
@@ -156,20 +210,27 @@
   </main>
 
   <script>
-    const allowedDocs = new Set([
-      "ceremony-sermon/README.md",
-      "grooms-vow/README.md",
-      "brides-vow/README.md",
-      "together-vow/README.md",
-      "grooms-fathers-speech/README.md",
-      "grooms-phd-advisors-speech/README.md",
-      "brides-brothers-speech/README.md",
-      "brides-friend-esthers-speech/README.md"
+    const pages = new Set([
+      "ceremony-sermon",
+      "grooms-vow",
+      "brides-vow",
+      "together-vow",
+      "grooms-fathers-speech",
+      "grooms-phd-advisors-speech",
+      "brides-brothers-speech",
+      "brides-friend-esthers-speech"
     ]);
+    const languages = {
+      en: { file: "english.md", htmlLang: "en" },
+      zh: { file: "chinese.md", htmlLang: "zh-Hans" },
+      ko: { file: "korean.md", htmlLang: "ko" }
+    };
 
     const content = document.querySelector("#content");
+    const languageButtons = document.querySelectorAll("[data-lang]");
     const params = new URLSearchParams(window.location.search);
-    const doc = params.get("doc") || "";
+    const page = params.get("page") || "";
+    let currentLanguage = languages[params.get("lang")] ? params.get("lang") : "en";
 
     function escapeHtml(value) {
       return value
@@ -198,17 +259,35 @@
       }).join("");
     }
 
-    async function loadReadme() {
-      if (!allowedDocs.has(doc)) {
+    function updateLanguageButtons() {
+      languageButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.lang === currentLanguage));
+      });
+    }
+
+    async function loadTranslation() {
+      if (!pages.has(page)) {
         content.textContent = "This translation page could not be found.";
         return;
       }
 
+      const language = languages[currentLanguage];
+      const markdownPath = `${page}/${language.file}`;
+      document.documentElement.lang = language.htmlLang;
+      content.classList.add("empty-state");
+      content.textContent = "Loading translation...";
+      updateLanguageButtons();
+
+      const nextUrl = new URL(window.location.href);
+      nextUrl.searchParams.set("page", page);
+      nextUrl.searchParams.set("lang", currentLanguage);
+      window.history.replaceState(null, "", nextUrl);
+
       try {
-        const response = await fetch(doc, { cache: "no-store" });
+        const response = await fetch(markdownPath, { cache: "no-store" });
 
         if (!response.ok) {
-          throw new Error("README not found");
+          throw new Error("Translation file not found");
         }
 
         content.classList.remove("empty-state");
@@ -218,7 +297,14 @@
       }
     }
 
-    loadReadme();
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentLanguage = button.dataset.lang;
+        loadTranslation();
+      });
+    });
+
+    loadTranslation();
   </script>
 </body>
 </html>
