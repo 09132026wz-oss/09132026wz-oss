@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wedding Translation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #26342f;
+      --muted: #6c756f;
+      --paper: #fffaf4;
+      --rose: #d7877e;
+      --rose-soft: #f7d9d1;
+      --sage: #789184;
+      --gold: #b18a4b;
+      --line: rgba(38, 52, 47, 0.15);
+      --shadow: 0 26px 90px rgba(56, 64, 59, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    *:focus-visible {
+      outline: 3px solid rgba(177, 138, 75, 0.42);
+      outline-offset: 3px;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(247, 217, 209, 0.9), transparent 30rem),
+        radial-gradient(circle at 84% 14%, rgba(237, 244, 240, 0.95), transparent 28rem),
+        linear-gradient(135deg, var(--paper) 0%, #f9efe8 48%, #eef6f2 100%);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 18px;
+      border: 1px solid rgba(177, 138, 75, 0.2);
+      content: "";
+      pointer-events: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      -webkit-tap-highlight-color: rgba(215, 135, 126, 0.18);
+    }
+
+    .page {
+      width: min(860px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 46px 0 70px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-bottom: 22px;
+      color: var(--sage);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    article {
+      padding: clamp(26px, 6vw, 58px);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: var(--shadow);
+    }
+
+    .kicker {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      font-weight: 500;
+    }
+
+    h1 {
+      margin: 0 0 28px;
+      font-size: clamp(2.5rem, 9vw, 5.2rem);
+      line-height: 0.96;
+      overflow-wrap: anywhere;
+    }
+
+    h2 {
+      margin: 34px 0 12px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--rose);
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
+    p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    @media (max-width: 560px) {
+      body::before {
+        inset: 10px;
+      }
+
+      .page {
+        width: min(100% - 24px, 860px);
+        padding: 26px 0 42px;
+      }
+
+      article {
+        padding: 26px 18px;
+      }
+
+      h1 {
+        margin-bottom: 22px;
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        margin-top: 28px;
+        font-size: 1.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <a class="back-link" href="./">Back to Menu</a>
+    <article>
+      <p class="kicker">Wedding Translation</p>
+      <div id="content" class="empty-state">Loading translation...</div>
+    </article>
+  </main>
+
+  <script>
+    const allowedDocs = new Set([
+      "ceremony-sermon/README.md",
+      "grooms-vow/README.md",
+      "brides-vow/README.md",
+      "together-vow/README.md",
+      "grooms-fathers-speech/README.md",
+      "grooms-phd-advisors-speech/README.md",
+      "brides-brothers-speech/README.md",
+      "brides-friend-esthers-speech/README.md"
+    ]);
+
+    const content = document.querySelector("#content");
+    const params = new URLSearchParams(window.location.search);
+    const doc = params.get("doc") || "";
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderMarkdown(markdown) {
+      const blocks = markdown.trim().split(/\n{2,}/);
+
+      return blocks.map((block) => {
+        if (block.startsWith("# ")) {
+          const title = block.replace(/^#\s+/, "");
+          document.title = `${title} | Wedding Translation`;
+          return `<h1>${escapeHtml(title)}</h1>`;
+        }
+
+        if (block.startsWith("## ")) {
+          return `<h2>${escapeHtml(block.replace(/^##\s+/, ""))}</h2>`;
+        }
+
+        return `<p>${escapeHtml(block)}</p>`;
+      }).join("");
+    }
+
+    async function loadReadme() {
+      if (!allowedDocs.has(doc)) {
+        content.textContent = "This translation page could not be found.";
+        return;
+      }
+
+      try {
+        const response = await fetch(doc, { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error("README not found");
+        }
+
+        content.classList.remove("empty-state");
+        content.innerHTML = renderMarkdown(await response.text());
+      } catch (error) {
+        content.textContent = "This translation is not available yet. Please check back soon.";
+      }
+    }
+
+    loadReadme();
+  </script>
+</body>
+</html>
