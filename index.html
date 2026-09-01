@@ -7,117 +7,471 @@
   <style>
     :root {
       color-scheme: light;
-      --ink: #24342f;
-      --muted: #64716d;
-      --paper: #fffaf2;
-      --petal: #f5cfc4;
-      --sage: #8da399;
-      --line: rgba(36, 52, 47, 0.18);
+      --ink: #26342f;
+      --muted: #6c756f;
+      --paper: #fffaf4;
+      --rose: #d7877e;
+      --rose-soft: #f7d9d1;
+      --sage: #789184;
+      --mist: #edf4f0;
+      --gold: #b18a4b;
+      --line: rgba(38, 52, 47, 0.15);
+      --shadow: 0 26px 90px rgba(56, 64, 59, 0.13);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       min-height: 100vh;
       margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 32px;
       background:
-        radial-gradient(circle at top left, rgba(245, 207, 196, 0.65), transparent 34rem),
-        linear-gradient(135deg, #fffaf2 0%, #f1f7f4 100%);
+        radial-gradient(circle at 12% 8%, rgba(247, 217, 209, 0.9), transparent 30rem),
+        radial-gradient(circle at 84% 14%, rgba(237, 244, 240, 0.95), transparent 28rem),
+        linear-gradient(135deg, var(--paper) 0%, #f9efe8 48%, #eef6f2 100%);
       color: var(--ink);
-      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    main {
-      width: min(100%, 720px);
-      padding: clamp(32px, 7vw, 72px);
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.7);
-      box-shadow: 0 24px 80px rgba(36, 52, 47, 0.10);
-      text-align: center;
+    body::before {
+      position: fixed;
+      inset: 18px;
+      border: 1px solid rgba(177, 138, 75, 0.2);
+      content: "";
+      pointer-events: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 54px 0 72px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: start;
+      padding: clamp(34px, 7vw, 76px) 0 44px;
     }
 
     .kicker {
-      margin: 0 0 18px;
+      margin: 0 0 16px;
       color: var(--sage);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 0.78rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(2.6rem, 9vw, 5.4rem);
+    h1,
+    h2 {
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
       font-weight: 500;
-      line-height: 0.95;
     }
 
-    p {
-      max-width: 520px;
-      margin: 24px auto 0;
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(3.2rem, 10vw, 7rem);
+      line-height: 0.92;
+    }
+
+    .intro {
+      max-width: 620px;
+      margin: 28px 0 0;
       color: var(--muted);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: clamp(1rem, 2.3vw, 1.2rem);
-      line-height: 1.7;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.75;
     }
 
-    .date {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 34px;
-      color: var(--ink);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+    .language-panel {
+      min-width: 280px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .language-label {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .date::before,
-    .date::after {
-      width: 38px;
-      height: 1px;
-      background: var(--petal);
+    .language-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 244, 0.84);
+    }
+
+    .language-switch button {
+      min-height: 42px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .language-switch button[aria-pressed="true"] {
+      background: var(--ink);
+      color: #fffaf4;
+      box-shadow: 0 8px 18px rgba(38, 52, 47, 0.18);
+    }
+
+    .sections {
+      display: grid;
+      gap: 28px;
+    }
+
+    section {
+      padding: clamp(24px, 4vw, 36px);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.62);
+      box-shadow: var(--shadow);
+    }
+
+    .section-heading {
+      display: flex;
+      gap: 20px;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1;
+    }
+
+    .section-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .translation-card {
+      position: relative;
+      display: grid;
+      min-height: 150px;
+      align-content: space-between;
+      padding: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(38, 52, 47, 0.13);
+      background: linear-gradient(160deg, rgba(255, 250, 244, 0.94), rgba(237, 244, 240, 0.72));
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .translation-card::after {
+      position: absolute;
+      right: -28px;
+      bottom: -36px;
+      width: 92px;
+      height: 92px;
+      border: 1px solid rgba(215, 135, 126, 0.34);
+      border-radius: 50%;
       content: "";
     }
 
-    @media (max-width: 520px) {
-      body {
-        padding: 18px;
+    .translation-card:hover,
+    .translation-card:focus-visible {
+      border-color: rgba(215, 135, 126, 0.58);
+      box-shadow: 0 18px 46px rgba(56, 64, 59, 0.14);
+      outline: 0;
+      transform: translateY(-3px);
+    }
+
+    .number {
+      color: var(--gold);
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: 1.7rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      position: relative;
+      margin-top: 28px;
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: clamp(1.22rem, 2vw, 1.55rem);
+      line-height: 1.12;
+    }
+
+    .card-action {
+      margin-top: 18px;
+      color: var(--sage);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      header {
+        grid-template-columns: 1fr;
       }
 
-      main {
-        padding: 34px 24px;
+      .language-panel {
+        min-width: 0;
+        width: min(100%, 420px);
       }
 
-      .date {
-        gap: 10px;
-        font-size: 0.78rem;
+      .button-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      body::before {
+        inset: 10px;
       }
 
-      .date::before,
-      .date::after {
-        width: 24px;
+      .page {
+        width: min(100% - 24px, 1120px);
+        padding-top: 28px;
+      }
+
+      header {
+        padding-top: 34px;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-note {
+        margin-top: 10px;
+        text-align: left;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .translation-card {
+        min-height: 128px;
       }
     }
   </style>
 </head>
 <body>
-  <main>
-    <p class="kicker">Coming Soon</p>
-    <h1>Wedding Translation</h1>
-    <p>
-      A small home for wedding details, translations, and helpful notes is being prepared.
-      Please check back soon.
-    </p>
-    <div class="date" aria-label="Wedding date">September 13, 2026</div>
+  <main class="page">
+    <header>
+      <div>
+        <p class="kicker" data-i18n="kicker">September 13, 2026</p>
+        <h1 data-i18n="title">Wedding Translation</h1>
+        <p class="intro" data-i18n="intro">
+          Ceremony and reception translations collected in one gentle place for family and friends.
+        </p>
+      </div>
+
+      <div class="language-panel" aria-label="Language selector">
+        <span class="language-label" data-i18n="languageLabel">Language</span>
+        <div class="language-switch">
+          <button type="button" data-lang="en" aria-pressed="true">English</button>
+          <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+          <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="sections">
+      <section aria-labelledby="ceremony-heading">
+        <div class="section-heading">
+          <h2 id="ceremony-heading" data-i18n="ceremony">Wedding Ceremony</h2>
+          <p class="section-note" data-i18n="ceremonyNote">Vows, promises, and the heart of the day.</p>
+        </div>
+        <div class="button-grid">
+          <a class="translation-card" href="ceremony-sermon/" data-card="sermon">
+            <span class="number">01</span>
+            <span class="card-title">Sermon</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+          <a class="translation-card" href="grooms-vow/" data-card="groomVow">
+            <span class="number">02</span>
+            <span class="card-title">Groom's Vow</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+          <a class="translation-card" href="brides-vow/" data-card="brideVow">
+            <span class="number">03</span>
+            <span class="card-title">Bride's Vow</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+          <a class="translation-card" href="together-vow/" data-card="togetherVow">
+            <span class="number">04</span>
+            <span class="card-title">Together Vow</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+        </div>
+      </section>
+
+      <section aria-labelledby="reception-heading">
+        <div class="section-heading">
+          <h2 id="reception-heading" data-i18n="reception">Wedding Reception</h2>
+          <p class="section-note" data-i18n="receptionNote">Toasts and speeches for the celebration after.</p>
+        </div>
+        <div class="button-grid">
+          <a class="translation-card" href="grooms-fathers-speech/" data-card="groomFather">
+            <span class="number">05</span>
+            <span class="card-title">Groom's Father's Speech</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+          <a class="translation-card" href="grooms-phd-advisors-speech/" data-card="phdAdvisor">
+            <span class="number">06</span>
+            <span class="card-title">Groom's PhD Advisor's Speech</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+          <a class="translation-card" href="brides-brothers-speech/" data-card="brideBrother">
+            <span class="number">07</span>
+            <span class="card-title">Bride's Brother's Speech</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+          <a class="translation-card" href="brides-friend-esthers-speech/" data-card="esther">
+            <span class="number">08</span>
+            <span class="card-title">Bride's Friend Esther's Speech</span>
+            <span class="card-action" data-i18n="openText">Open Translation</span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <footer data-i18n="footer">Prepared with love for guests who are following along across languages.</footer>
   </main>
+
+  <script>
+    const translations = {
+      en: {
+        pageLang: "en",
+        kicker: "September 13, 2026",
+        title: "Wedding Translation",
+        intro: "Ceremony and reception translations collected in one gentle place for family and friends.",
+        languageLabel: "Language",
+        ceremony: "Wedding Ceremony",
+        ceremonyNote: "Vows, promises, and the heart of the day.",
+        reception: "Wedding Reception",
+        receptionNote: "Toasts and speeches for the celebration after.",
+        openText: "Open Translation",
+        footer: "Prepared with love for guests who are following along across languages.",
+        cards: {
+          sermon: "Sermon",
+          groomVow: "Groom's Vow",
+          brideVow: "Bride's Vow",
+          togetherVow: "Together Vow",
+          groomFather: "Groom's Father's Speech",
+          phdAdvisor: "Groom's PhD Advisor's Speech",
+          brideBrother: "Bride's Brother's Speech",
+          esther: "Bride's Friend Esther's Speech"
+        }
+      },
+      zh: {
+        pageLang: "zh-Hans",
+        kicker: "2026年9月13日",
+        title: "婚礼翻译",
+        intro: "为家人和朋友准备的婚礼仪式与晚宴翻译，一切都放在这里，方便大家跟随。",
+        languageLabel: "语言",
+        ceremony: "婚礼仪式",
+        ceremonyNote: "誓言、承诺，以及这一天最温柔的部分。",
+        reception: "婚礼晚宴",
+        receptionNote: "晚宴上的致辞与祝福。",
+        openText: "查看翻译",
+        footer: "献给所有用不同语言一起见证这一天的亲友。",
+        cards: {
+          sermon: "证道",
+          groomVow: "新郎誓言",
+          brideVow: "新娘誓言",
+          togetherVow: "共同誓言",
+          groomFather: "新郎父亲致辞",
+          phdAdvisor: "新郎博士导师致辞",
+          brideBrother: "新娘哥哥致辞",
+          esther: "新娘朋友 Esther 致辞"
+        }
+      },
+      ko: {
+        pageLang: "ko",
+        kicker: "2026년 9월 13일",
+        title: "웨딩 번역",
+        intro: "가족과 친구들이 함께 따라올 수 있도록 예식과 피로연 번역을 한곳에 모았습니다.",
+        languageLabel: "언어",
+        ceremony: "결혼 예식",
+        ceremonyNote: "서약과 약속, 그리고 이 날의 가장 소중한 순간들.",
+        reception: "결혼 피로연",
+        receptionNote: "축하 자리에서 나누는 축사와 인사.",
+        openText: "번역 보기",
+        footer: "여러 언어로 이 날을 함께 지켜보는 모든 분들을 위해 준비했습니다.",
+        cards: {
+          sermon: "설교",
+          groomVow: "신랑 서약",
+          brideVow: "신부 서약",
+          togetherVow: "함께하는 서약",
+          groomFather: "신랑 아버지 축사",
+          phdAdvisor: "신랑 박사 지도교수 축사",
+          brideBrother: "신부 오빠 축사",
+          esther: "신부 친구 Esther 축사"
+        }
+      }
+    };
+
+    const languageButtons = document.querySelectorAll("[data-lang]");
+    const textTargets = document.querySelectorAll("[data-i18n]");
+    const cards = document.querySelectorAll("[data-card]");
+
+    function setLanguage(language) {
+      const copy = translations[language] || translations.en;
+
+      document.documentElement.lang = copy.pageLang;
+      textTargets.forEach((target) => {
+        const key = target.dataset.i18n;
+        target.textContent = copy[key];
+      });
+      cards.forEach((card) => {
+        card.querySelector(".card-title").textContent = copy.cards[card.dataset.card];
+      });
+      languageButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.lang === language));
+      });
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+  </script>
 </body>
 </html>
