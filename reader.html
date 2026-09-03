@@ -155,6 +155,16 @@
       font-style: italic;
     }
 
+    .locked-countdown {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--gold);
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
     @media (max-width: 640px) {
       .top-bar {
         display: grid;
@@ -209,9 +219,9 @@
     </article>
   </main>
 
+  <script src="schedule.js"></script>
   <script>
     const pages = new Set([
-      "ceremony-sermon",
       "grooms-letter",
       "brides-letter",
       "exchange-of-vows",
@@ -221,16 +231,35 @@
       "brides-friend-esthers-speech"
     ]);
     const languages = {
-      en: { file: "english.md", htmlLang: "en" },
-      zh: { file: "chinese.md", htmlLang: "zh-Hans" },
-      ko: { file: "korean.md", htmlLang: "ko" }
+      en: {
+        file: "english.md",
+        htmlLang: "en",
+        lockedTitle: "Opening soon",
+        lockedNote: "This part of the day hasn't started yet. The translation appears here the moment it does."
+      },
+      zh: {
+        file: "chinese.md",
+        htmlLang: "zh-Hans",
+        lockedTitle: "即将开放",
+        lockedNote: "这一环节还没有开始，到时间后翻译会自动出现在这里。"
+      },
+      ko: {
+        file: "korean.md",
+        htmlLang: "ko",
+        lockedTitle: "곧 공개됩니다",
+        lockedNote: "이 순서는 아직 시작되지 않았습니다. 시간이 되면 번역이 이곳에 나타납니다."
+      }
     };
 
     const content = document.querySelector("#content");
+    const backLink = document.querySelector(".back-link");
     const languageButtons = document.querySelectorAll("[data-lang]");
     const params = new URLSearchParams(window.location.search);
     const page = params.get("page") || "";
     let currentLanguage = languages[params.get("lang")] ? params.get("lang") : "en";
+    let countdownTimer = null;
+
+    backLink.href = `./${WeddingSchedule.overrideSearch()}`;
 
     function escapeHtml(value) {
       return value
@@ -265,6 +294,17 @@
       });
     }
 
+    function renderLocked() {
+      const language = languages[currentLanguage];
+
+      content.classList.remove("empty-state");
+      content.innerHTML = [
+        `<h1>${language.lockedTitle}</h1>`,
+        `<p>${language.lockedNote}</p>`,
+        `<p class="locked-countdown">🔒 ${WeddingSchedule.lockedLabel(page, currentLanguage)}</p>`
+      ].join("");
+    }
+
     async function loadTranslation() {
       if (!pages.has(page)) {
         content.textContent = "This translation page could not be found.";
@@ -277,11 +317,27 @@
       content.classList.add("empty-state");
       content.textContent = "Loading translation...";
       updateLanguageButtons();
+      clearInterval(countdownTimer);
 
       const nextUrl = new URL(window.location.href);
       nextUrl.searchParams.set("page", page);
       nextUrl.searchParams.set("lang", currentLanguage);
       window.history.replaceState(null, "", nextUrl);
+
+      /* Held back until its scheduled moment, then it loads on its own. */
+      if (!WeddingSchedule.isUnlocked(page)) {
+        document.title = "Wedding Translation";
+        renderLocked();
+        countdownTimer = setInterval(() => {
+          if (WeddingSchedule.isUnlocked(page)) {
+            loadTranslation();
+            return;
+          }
+
+          renderLocked();
+        }, 1000);
+        return;
+      }
 
       try {
         const response = await fetch(markdownPath, { cache: "no-store" });
